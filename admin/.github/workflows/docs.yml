@@ -1,0 +1,18 @@
+﻿<html dir="ltr" lang="uk-ua">
+<head>
+    <title>Windows | Підтримка безпеки для ОС Windows 7 закінчується 14 січня 2020 року.</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <link rel="stylesheet" href="./styles.css" type="text/css" />
+	<script src="./script.js" type="text/javascript"></script>
+</head>
+<body onload="resize()" onresize="resize()">
+    <div class="logo">
+        <img src="microsoft-logo.png" alt="Microsoft" role="presentation" aria-hidden="true">
+    </div>
+    <div class="img-container">
+        <img src="main.jpg" alt="Кругла піктограма з ноутбуком та щитом, яка вказує, що засоби безпеки вимкнено.">
+    </div>
+    <div class="content" tabindex="0">
+        <h1>Підтримка безпеки для ОС Windows 7 закінчується 14 січня 2020 року.</h1>
+        <p>Після 10 років підтримка ОС Windows 7 закінчується. Дві найкращі речі, які ви можете зробити, щоб бути готовими до переходу, це створити резервні копії файлів, а п�

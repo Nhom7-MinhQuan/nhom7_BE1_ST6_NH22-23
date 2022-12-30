@@ -1,0 +1,66 @@
+: void {
+  for (const e of elements) {
+    e?.parentElement?.removeChild(e);
+  }
+}
+/**
+ * Copyright (c) 2018 The xterm.js authors. All rights reserved.
+ * @license MIT
+ */
+
+import { IDisposable } from 'common/Types';
+
+/**
+ * Adds a disposable listener to a node in the DOM, returning the disposable.
+ * @param type The event type.
+ * @param handler The handler for the listener.
+ */
+export function addDisposableDomListener(
+  node: Element | Window | Document,
+  type: string,
+  handler: (e: any) => void,
+  options?: boolean | AddEventListenerOptions
+): IDisposable {
+  node.addEventListener(type, handler, options);
+  let disposed = false;
+  return {
+    dispose: () => {
+      if (disposed) {
+        return;
+      }
+      disposed = true;
+      node.removeEventListener(type, handler, options);
+    }
+  };
+}
+/**
+ * Copyright (c) 2017 The xterm.js authors. All rights reserved.
+ * @license MIT
+ */
+
+import { ILinkifierEvent, ILinkMatcher, LinkMatcherHandler, ILinkMatcherOptions, ILinkifier, IMouseZoneManager, IMouseZone, IRegisteredLinkMatcher } from 'browser/Types';
+import { IBufferStringIteratorResult } from 'common/buffer/Types';
+import { EventEmitter, IEvent } from 'common/EventEmitter';
+import { ILogService, IBufferService, IOptionsService, IUnicodeService } from 'common/services/Services';
+
+/**
+ * Limit of the unwrapping line expansion (overscan) at the top and bottom
+ * of the actual viewport in ASCII characters.
+ * A limit of 2000 should match most sane urls.
+ */
+const OVERSCAN_CHAR_LIMIT = 2000;
+
+/**
+ * The Linkifier applies links to rows shortly after they have been refreshed.
+ */
+export class Linkifier implements ILinkifier {
+  /**
+   * The time to wait after a row is changed before it is linkified. This prevents
+   * the costly operation of searching every row multiple times, potentially a
+   * huge amount of times.
+   */
+  protected static _timeBeforeLatency = 200;
+
+  protected _linkMatchers: IRegisteredLinkMatcher[] = [];
+
+  private _mouseZoneManager: IMouseZoneM

@@ -1,0 +1,15 @@
+eam.match(terminator)){state.tokenize=inText;break;}
+stream.next();}
+return style;}}
+function doctype(depth){return function(stream,state){var ch;while((ch=stream.next())!=null){if(ch=="<"){state.tokenize=doctype(depth+1);return state.tokenize(stream,state);}else if(ch==">"){if(depth==1){state.tokenize=inText;break;}else{state.tokenize=doctype(depth-1);return state.tokenize(stream,state);}}}
+return"meta";};}
+function Context(state,tagName,startOfLine){this.prev=state.context;this.tagName=tagName;this.indent=state.indented;this.startOfLine=startOfLine;if(config.doNotIndent.hasOwnProperty(tagName)||(state.context&&state.context.noIndent))
+this.noIndent=true;}
+function popContext(state){if(state.context)state.context=state.context.prev;}
+function maybePopContext(state,nextTagName){var parentTagName;while(true){if(!state.context){return;}
+parentTagName=state.context.tagName;if(!config.contextGrabbers.hasOwnProperty(parentTagName)||!config.contextGrabbers[parentTagName].hasOwnProperty(nextTagName)){return;}
+popContext(state);}}
+function baseState(type,stream,state){if(type=="openTag"){state.tagStart=stream.column();return tagNameState;}else if(type=="closeTag"){return closeTagNameState;}else{return baseState;}}
+function tagNameState(type,stream,state){if(type=="word"){state.tagName=stream.current();setStyle="tag";return attrState;}else if(config.allowMissingTagName&&type=="endTag"){setStyle="tag bracket";return attrState(type,stream,state);}else{setStyle="error";return tagNameState;}}
+function closeTagNameState(type,stream,state){if(type=="word"){var tagName=stream.current();if(state.context&&state.context.tagName!=tagName&&config.implicitlyClosed.hasOwnProperty(state.context.tagName))
+popContext(state);if((state.context&&state.context.tagName==tagName)||config.matchClosing===false){setStyle="tag";return closeState;}else{setStyle="tag error";return closeStateErr;}}else if(config.allowMissingTagName&&type=="endTag"){setStyle="tag bracket";return closeState(type,stream,state);}else{setStyle="error";return closeStateErr;}}

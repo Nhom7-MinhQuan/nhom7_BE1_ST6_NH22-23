@@ -90,6 +90,45 @@
             $items = $sql->get_result()->fetch_all(MYSQLI_ASSOC);
             return $items; //return an array
         }
-
+        public function SearchName($keyword)
+        {
+            $keyword = '%'.$keyword.'%';
+            $sql = self::$connection->prepare("SELECT * FROM `products` ,`protypes`,`manufactures` WHERE `products`.`manu_id` = `manufactures`.`manu_id` AND `products`.`type_id` = `protypes`.`type_id` AND `products`.`name` like ?");
+            $sql->bind_param("s",$keyword);
+            $sql->execute(); //return an object
+            $items = array();
+            $items = $sql->get_result()->fetch_all(MYSQLI_ASSOC);
+            return $items; //return an array
+        }
+        public function SearchDescription($keyword)
+        {
+            $keyword = '%'.$keyword.'%';
+            $sql = self::$connection->prepare("SELECT * FROM `products` ,`protypes`,`manufactures` WHERE `products`.`manu_id` = `manufactures`.`manu_id` AND `products`.`type_id` = `protypes`.`type_id` AND description like ?");
+            $sql->bind_param("s",$keyword);
+            $sql->execute(); //return an object
+            $items = array();
+            $items = $sql->get_result()->fetch_all(MYSQLI_ASSOC);
+            return $items; //return an array
+        }
+        public function page($id, $page)
+        {
+            $page = $page * 3;
+            $sql = self::$connection->prepare("SELECT * FROM products WHERE type_id = ? LIMIT ?,3");
+            $sql->bind_param("ii",$id, $page);
+            $sql->execute(); //return an object
+            $items = array();
+            $items = $sql->get_result()->fetch_all(MYSQLI_ASSOC);
+            return $items; //return an array
+        }
+        public function pageSearch($keyword, $page)
+        {
+            $page = $page * 3;
+            $sql = self::$connection->prepare("SELECT * FROM products WHERE `name` like '%$keyword%' LIMIT ?,3");
+            $sql->bind_param("i", $page);
+            $sql->execute(); //return an object
+            $items = array();
+            $items = $sql->get_result()->fetch_all(MYSQLI_ASSOC);
+            return $items; //return an array
+        }
     }
 ?>

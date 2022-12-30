@@ -1,0 +1,28 @@
+\n}\n","/**\n * Copyright (c) 2019 The xterm.js authors. All rights reserved.\n * @license MIT\n */\n\nimport { ITerminalAddon, IDisposable, Terminal } from 'xterm';\n\nexport interface ILoadedAddon {\n  instance: ITerminalAddon;\n  dispose: () => void;\n  isDisposed: boolean;\n}\n\nexport class AddonManager implements IDisposable {\n  protected _addons: ILoadedAddon[] = [];\n\n  constructor() {\n  }\n\n  public dispose(): void {\n    for (let i = this._addons.length - 1; i >= 0; i--) {\n      this._addons[i].instance.dispose();\n    }\n  }\n\n  public loadAddon(terminal: Terminal, instance: ITerminalAddon): void {\n    const loadedAddon: ILoadedAddon = {\n      instance,\n      dispose: instance.dispose,\n      isDisposed: false\n    };\n    this._addons.push(loadedAddon);\n    instance.dispose = () => this._wrappedAddonDispose(loadedAddon);\n    instance.activate(<any>terminal);\n  }\n\n  private _wrappedAddonDispose(loadedAddon: ILoadedAddon): void {\n    if (loadedAddon.isDisposed) {\n      // Do nothing if already disposed\n      return;\n    }\n    let index = -1;\n    for (let i = 0; i < this._addons.length; i++) {\n      if (this._addons[i] === loadedAddon) {\n        index = i;\n        break;\n      }\n    }\n    if (index === -1) {\n      throw new Error('Could not dispose an addon that has not been loaded');\n    }\n    loadedAddon.isDisposed = true;\n    loadedAddon.dispose.apply(loadedAddon.instance);\n    this._addons.splice(index, 1);\n  }\n}\n"],"sourceRoot":""}{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": [ "es5" ],
+    "rootDir": ".",
+
+    "sourceMap": true,
+    "removeComments": true,
+    "pretty": true,
+
+    "incremental": true,
+    "experimentalDecorators": true
+  }
+}
+{
+  "extends": "./tsconfig-base.json",
+  "compilerOptions": {
+    "composite": true,
+    "strict": true,
+    "declarationMap": true,
+    "experimentalDecorators": true
+  }
+}
+/**
+ * @license MIT
+ *
+ * This contains the type declarations for the xterm.js library. Note that
+ * some interfaces differ between this file and the actual implementation in

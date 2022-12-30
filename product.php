@@ -76,17 +76,23 @@
 							</div>
 							<p><?php echo $value['description'] ?></p>
 
+							<form action="xulycart.php" method="get">
 							<div class="add-to-cart">
-								<div class="qty-label">
+								<!-- <div class="qty-label">
 									Qty
 									<div class="input-number">
 										<input type="number">
 										<span class="qty-up">+</span>
 										<span class="qty-down">-</span>
 									</div>
+								</div> -->
+									<input type="hidden" name="pro" value="0">
+									<input type="hidden" name="them" value="0">
+									<input type="hidden" name="id" value="<?php echo $value['id']; ?>">
+									<input type="hidden" name="price" value="<?php echo $value['price']; ?>">
+									<button class="add-to-cart-btn" name="addtocart"><i class="fa fa-shopping-cart"></i> add to cart</button>
 								</div>
-								<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-							</div>
+							</form>
 
 							<ul class="product-btns">
 								<li><a href="#"><i class="fa fa-heart-o"></i> add to wishlist</a></li>
@@ -374,6 +380,11 @@
 							</div>
 						</div>
 					</div>
+					<?php 
+	}
+		}
+	}
+?>
 					<!-- /product -->
 					<!-- <div class="clearfix visible-sm visible-xs"></div> -->
 				</div>
@@ -382,11 +393,7 @@
 			<!-- /container -->
 		</div>
 		<!-- /Section -->
-<?php 
-	}
-		}
-	}
-?>
+
 		<!-- NEWSLETTER -->
 		<div id="newsletter" class="section">
 			<!-- container -->

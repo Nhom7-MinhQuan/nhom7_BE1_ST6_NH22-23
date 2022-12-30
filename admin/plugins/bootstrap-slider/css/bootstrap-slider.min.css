@@ -1,0 +1,69 @@
+space,this);this._toolbar.appendToolbarItem(setupButton);}
+async _setupNewWorkspace(){const fileSystem=await Persistence.isolatedFileSystemManager.addFileSystem('overrides');if(!fileSystem)
+return;Common.settings.moduleSetting('persistenceNetworkOverridesEnabled').set(true);}
+acceptProject(project){return project===Persistence.networkPersistenceManager.project();}};Sources.ContentScriptsNavigatorView=class extends Sources.NavigatorView{constructor(){super();const placeholder=new UI.EmptyWidget('');this.setPlaceholder(placeholder);placeholder.appendParagraph().appendChild(UI.html`
+      <div>${ls`Content scripts served by extensions appear here`}</div><br />
+      ${UI.XLink.create('https://developer.chrome.com/extensions/content_scripts', ls`Learn more`)}
+    `);}
+acceptProject(project){return project.type()===Workspace.projectTypes.ContentScripts;}};Sources.SnippetsNavigatorView=class extends Sources.NavigatorView{constructor(){super();const placeholder=new UI.EmptyWidget('');this.setPlaceholder(placeholder);placeholder.appendParagraph().appendChild(UI.html`
+      <div>${ls`Create and save code snippets for later reuse`}</div><br />
+      ${UI.XLink.create('https://developers.google.com/web/tools/chrome-devtools/javascript/snippets', ls`Learn more`)}
+    `);const toolbar=new UI.Toolbar('navigator-toolbar');const newButton=new UI.ToolbarButton('','largeicon-add',Common.UIString('New snippet'));newButton.addEventListener(UI.ToolbarButton.Events.Click,()=>this.create(Snippets.project,''));toolbar.appendToolbarItem(newButton);this.contentElement.insertBefore(toolbar.element,this.contentElement.firstChild);}
+acceptProject(project){return Snippets.isSnippetsProject(project);}
+handleContextMenu(event){const contextMenu=new UI.ContextMenu(event);contextMenu.headerSection().appendItem(Common.UIString('New'),()=>this.create(Snippets.project,''));contextMenu.show();}
+handleFileContextMenu(event,node){const uiSourceCode=node.uiSourceCode();const contextMenu=new UI.ContextMenu(event);contextMenu.headerSection().appendItem(Common.UIString('Run'),()=>Snippets.evaluateScriptSnippet(uiSourceCode));contextMenu.editSection().appendItem(Common.UIString('Rename\u2026'),()=>this.rename(node,false));contextMenu.editSection().appendItem(Common.UIString('Remove'),()=>uiSourceCode.project().deleteFile(uiSourceCode));contextMenu.saveSection().appendItem(Common.UIString('Save as...'),this._handleSaveAs.bind(this,uiSourceCode));contextMenu.show();}
+async _handleSaveAs(uiSourceCode){uiSourceCode.commitWorkingCopy();const content=await uiSourceCode.requestContent();Workspace.fileManager.save(uiSourceCode.url(),content,true);Workspace.fileManager.close(uiSourceCode.url());}};Sources.ActionDelegate=class{handleAction(context,actionId){switch(actionId){case'sources.create-snippet':Snippets.project.createFile('',null,'').then(uiSourceCode=>Common.Revealer.reveal(uiSourceCode));return true;case'sources.add-folder-to-workspace':Persistence.isolatedFileSystemManager.addFileSystem();return true;}
+return false;}};;Sources.OutlineQuickOpen=class extends QuickOpen.FilteredListWidget.Provider{constructor(){super();this._items=[];this._active=false;}
+attach(){this._items=[];this._active=false;const uiSourceCode=this._currentUISourceCode();if(uiSourceCode){this._active=Formatter.formatterWorkerPool().outlineForMimetype(uiSourceCode.workingCopy(),uiSourceCode.contentType().canonicalMimeType(),this._didBuildOutlineChunk.bind(this));}}
+_didBuildOutlineChunk(isLastChunk,items){this._items.push(...items);this.refresh();}
+itemCount(){return this._items.length;}
+itemKeyAt(itemIndex){const item=this._items[itemIndex];return item.title+(item.subtitle?item.subtitle:'');}
+itemScoreAt(itemIndex,query){const item=this._items[itemIndex];const methodName=query.split('(')[0];if(methodName.toLowerCase()===item.title.toLowerCase())
+return 1/(1+item.line);return-item.line-1;}
+renderItem(itemIndex,query,titleElement,subtitleElement){const item=this._items[itemIndex];titleElement.textContent=item.title+(item.subtitle?item.subtitle:'');QuickOpen.FilteredListWidget.highlightRanges(titleElement,query);subtitleElement.textContent=':'+(item.line+1);}
+selectItem(itemIndex,promptValue){if(itemIndex===null)
+return;const uiSourceCode=this._currentUISourceCode();if(!uiSourceCode)
+return;const lineNumber=this._items[itemIndex].line;if(!isNaN(lineNumber)&&lineNumber>=0)
+Common.Revealer.reveal(uiSourceCode.uiLocation(lineNumber,this._items[itemIndex].column));}
+_currentUISourceCode(){const sourcesView=UI.context.flavor(Sources.SourcesView);if(!sourcesView)
+return null;return sourcesView.currentUISourceCode();}
+notFoundText(){if(!this._currentUISourceCode())
+return Common.UIString('No file selected.');if(!this._active)
+return Common.UIString('Open a JavaScript or CSS file to see symbols');return Common.UIString('No results found');}};;Sources.TabbedEditorContainerDelegate=function(){};Sources.TabbedEditorContainerDelegate.prototype={viewForFile(uiSourceCode){},recycleUISourceCodeFrame(sourceFrame,uiSourceCode){},};Sources.TabbedEditorContainer=class extends Common.Object{constructor(delegate,setting,placeholderElement){super();this._delegate=delegate;this._tabbedPane=new UI.TabbedPane();this._tabbedPane.setPlaceholderElement(placeholderElement);this._tabbedPane.setTabDelegate(new Sources.EditorContainerTabDelegate(this));this._tabbedPane.setCloseableTabs(true);this._tabbedPane.setAllowTabReorder(true,true);this._tabbedPane.addEventListener(UI.TabbedPane.Events.TabClosed,this._tabClosed,this);this._tabbedPane.addEventListener(UI.TabbedPane.Events.TabSelected,this._tabSelected,this);Persistence.persistence.addEventListener(Persistence.Persistence.Events.BindingCreated,this._onBindingCreated,this);Persistence.persistence.addEventListener(Persistence.Persistence.Events.BindingRemoved,this._onBindingRemoved,this);this._tabIds=new Map();this._files={};this._previouslyViewedFilesSetting=setting;this._history=Sources.TabbedEditorContainer.History.fromObject(this._previouslyViewedFilesSetting.get());}
+_onBindingCreated(event){const binding=(event.data);this._updateFileTitle(binding.fileSystem);const networkTabId=this._tabIds.get(binding.network);let fileSystemTabId=this._tabIds.get(binding.fileSystem);const wasSelectedInNetwork=this._currentFile===binding.network;const currentSelectionRange=this._history.selectionRange(binding.network.url());const currentScrollLineNumber=this._history.scrollLineNumber(binding.network.url());this._history.remove(binding.network.url());if(!networkTabId)
+return;if(!fileSystemTabId){const networkView=this._tabbedPane.tabView(networkTabId);const tabIndex=this._tabbedPane.tabIndex(networkTabId);if(networkView instanceof Sources.UISourceCodeFrame){this._delegate.recycleUISourceCodeFrame(networkView,binding.fileSystem);fileSystemTabId=this._appendFileTab(binding.fileSystem,false,tabIndex,networkView);}else{fileSystemTabId=this._appendFileTab(binding.fileSystem,false,tabIndex);const fileSystemTabView=(this._tabbedPane.tabView(fileSystemTabId));this._restoreEditorProperties(fileSystemTabView,currentSelectionRange,currentScrollLineNumber);}}
+this._closeTabs([networkTabId],true);if(wasSelectedInNetwork)
+this._tabbedPane.selectTab(fileSystemTabId,false);this._updateHistory();}
+_onBindingRemoved(event){const binding=(event.data);this._updateFileTitle(binding.fileSystem);}
+get view(){return this._tabbedPane;}
+get visibleView(){return this._tabbedPane.visibleView;}
+fileViews(){return(this._tabbedPane.tabViews());}
+leftToolbar(){return this._tabbedPane.leftToolbar();}
+rightToolbar(){return this._tabbedPane.rightToolbar();}
+show(parentElement){this._tabbedPane.show(parentElement);}
+showFile(uiSourceCode){this._innerShowFile(uiSourceCode,true);}
+closeFile(uiSourceCode){const tabId=this._tabIds.get(uiSourceCode);if(!tabId)
+return;this._closeTabs([tabId]);}
+closeAllFiles(){this._closeTabs(this._tabbedPane.tabIds());}
+historyUISourceCodes(){const uriToUISourceCode={};for(const id in this._files){const uiSourceCode=this._files[id];uriToUISourceCode[uiSourceCode.url()]=uiSourceCode;}
+const result=[];const uris=this._history._urls();for(let i=0;i<uris.length;++i){const uiSourceCode=uriToUISourceCode[uris[i]];if(uiSourceCode)
+result.push(uiSourceCode);}
+return result;}
+_addViewListeners(){if(!this._currentView||!this._currentView.textEditor)
+return;this._currentView.textEditor.addEventListener(SourceFrame.SourcesTextEditor.Events.ScrollChanged,this._scrollChanged,this);this._currentView.textEditor.addEventListener(SourceFrame.SourcesTextEditor.Events.SelectionChanged,this._selectionChanged,this);}
+_removeViewListeners(){if(!this._currentView||!this._currentView.textEditor)
+return;this._currentView.textEditor.removeEventListener(SourceFrame.SourcesTextEditor.Events.ScrollChanged,this._scrollChanged,this);this._currentView.textEditor.removeEventListener(SourceFrame.SourcesTextEditor.Events.SelectionChanged,this._selectionChanged,this);}
+_scrollChanged(event){if(this._scrollTimer)
+clearTimeout(this._scrollTimer);const lineNumber=(event.data);this._scrollTimer=setTimeout(saveHistory.bind(this),100);this._history.updateScrollLineNumber(this._currentFile.url(),lineNumber);function saveHistory(){this._history.save(this._previouslyViewedFilesSetting);}}
+_selectionChanged(event){const range=(event.data);this._history.updateSelectionRange(this._currentFile.url(),range);this._history.save(this._previouslyViewedFilesSetting);Extensions.extensionServer.sourceSelectionChanged(this._currentFile.url(),range);}
+_innerShowFile(uiSourceCode,userGesture){const binding=Persistence.persistence.binding(uiSourceCode);uiSourceCode=binding?binding.fileSystem:uiSourceCode;if(this._currentFile===uiSourceCode)
+return;this._removeViewListeners();this._currentFile=uiSourceCode;const tabId=this._tabIds.get(uiSourceCode)||this._appendFileTab(uiSourceCode,userGesture);this._tabbedPane.selectTab(tabId,userGesture);if(userGesture)
+this._editorSelectedByUserAction();const previousView=this._currentView;this._currentView=this.visibleView;this._addViewListeners();const eventData={currentFile:this._currentFile,currentView:this._currentView,previousView:previousView,userGesture:userGesture};this.dispatchEventToListeners(Sources.TabbedEditorContainer.Events.EditorSelected,eventData);}
+_titleForFile(uiSourceCode){const maxDisplayNameLength=30;let title=uiSourceCode.displayName(true).trimMiddle(maxDisplayNameLength);if(uiSourceCode.isDirty())
+title+='*';return title;}
+_maybeCloseTab(id,nextTabId){const uiSourceCode=this._files[id];const shouldPrompt=uiSourceCode.isDirty()&&uiSourceCode.project().canSetFileContent();if(!shouldPrompt||confirm(Common.UIString('Are you sure you want to close unsaved file: %s?',uiSourceCode.name()))){uiSourceCode.resetWorkingCopy();if(nextTabId)
+this._tabbedPane.selectTab(nextTabId,true);this._tabbedPane.closeTab(id,true);return true;}
+return false;}
+_closeTabs(ids,forceCloseDirtyTabs){const dirtyTabs=[];const cleanTabs=[];for(let i=0;i<ids.length;++i){const id=ids[i];const uiSourceCode=this._files[id];if(!forceCloseDirtyTabs&&uiSourceCode.isDirty())
+dirtyTabs.push(id);else
+cleanTabs.push(id);}

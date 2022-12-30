@@ -1,0 +1,62 @@
+[3]);
+    this.colors.ansi[4] = this._parseColor(theme.blue, DEFAULT_ANSI_COLORS[4]);
+    this.colors.ansi[5] = this._parseColor(theme.magenta, DEFAULT_ANSI_COLORS[5]);
+    this.colors.ansi[6] = this._parseColor(theme.cyan, DEFAULT_ANSI_COLORS[6]);
+    this.colors.ansi[7] = this._parseColor(theme.white, DEFAULT_ANSI_COLORS[7]);
+    this.colors.ansi[8] = this._parseColor(theme.brightBlack, DEFAULT_ANSI_COLORS[8]);
+    this.colors.ansi[9] = this._parseColor(theme.brightRed, DEFAULT_ANSI_COLORS[9]);
+    this.colors.ansi[10] = this._parseColor(theme.brightGreen, DEFAULT_ANSI_COLORS[10]);
+    this.colors.ansi[11] = this._parseColor(theme.brightYellow, DEFAULT_ANSI_COLORS[11]);
+    this.colors.ansi[12] = this._parseColor(theme.brightBlue, DEFAULT_ANSI_COLORS[12]);
+    this.colors.ansi[13] = this._parseColor(theme.brightMagenta, DEFAULT_ANSI_COLORS[13]);
+    this.colors.ansi[14] = this._parseColor(theme.brightCyan, DEFAULT_ANSI_COLORS[14]);
+    this.colors.ansi[15] = this._parseColor(theme.brightWhite, DEFAULT_ANSI_COLORS[15]);
+    // Clear our the cache
+    this._contrastCache.clear();
+  }
+
+  private _parseColor(
+    css: string | undefined,
+    fallback: IColor,
+    allowTransparency: boolean = this.allowTransparency
+  ): IColor {
+    if (css === undefined) {
+      return fallback;
+    }
+
+    // If parsing the value results in failure, then it must be ignored, and the attribute must
+    // retain its previous value.
+    // -- https://html.spec.whatwg.org/multipage/canvas.html#fill-and-stroke-styles
+    this._ctx.fillStyle = this._litmusColor;
+    this._ctx.fillStyle = css;
+    if (typeof this._ctx.fillStyle !== 'string') {
+      console.warn(`Color: ${css} is invalid using fallback ${fallback.css}`);
+      return fallback;
+    }
+
+    this._ctx.fillRect(0, 0, 1, 1);
+    const data = this._ctx.getImageData(0, 0, 1, 1).data;
+
+    // Check if the printed color was transparent
+    if (data[3] !== 0xFF) {
+      if (!allowTransparency) {
+        // Ideally we'd just ignore the alpha channel, but...
+        //
+        // Browsers may not give back exactly the same RGB values we put in, because most/all
+        // convert the color to a pre-multiplied representation. getImageData converts that back to
+        // a un-premultipled representation, but the precision loss may make the RGB channels unuable
+        // on their own.
+        //
+        // E.g. In Chrome #12345610 turns into #10305010, and in the extreme case, 0xFFFFFF00 turns
+        // into 0x00000000.
+        //
+        // "Note: Due to the lossy nature of converting to and from premultiplied alpha color values,
+        // pixels that have just been set using putImageData() might be returned to an equivalent
+        // getImageData() as different values."
+        // -- https://html.spec.whatwg.org/multipage/canvas.html#pixel-manipulation
+        //
+        // So let's just use the fallback color in this case instead.
+        console.warn(
+          `Color: ${css} is using transparency, but allowTransparency is false. ` +
+          `Using fallback ${fallback.css}.`
+        

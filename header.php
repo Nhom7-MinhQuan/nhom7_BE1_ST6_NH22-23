@@ -48,7 +48,7 @@
 					</ul>
 					<ul class="header-links pull-right">
 						<li><a href="#"><i class="fa fa-dollar"></i> USD</a></li>
-						<li><a href="#"><i class="fa fa-user-o"></i> My Account</a></li>
+						<li><a href="login.php"><i class="fa fa-user-o"></i> Login</a></li>
 					</ul>
 				</div>
 			</div>
@@ -73,13 +73,16 @@
 						<!-- SEARCH BAR -->
 						<div class="col-md-6">
 							<div class="header-search">
-								<form>
+								<form action="store.php?id=<?php if (isset($_GET['search'])) {
+									$_GET['search'];
+								}?>" method="get">
 									<select class="input-select">
 										<option value="0">All Categories</option>
 										<option value="1">Category 01</option>
 										<option value="1">Category 02</option>
 									</select>
-									<input class="input" placeholder="Search here">
+									<input type="hidden" name="page" value="0">
+									<input class="input" name="keyword" placeholder="Search here" >
 									<button class="search-btn">Search</button>
 								</form>
 							</div>
@@ -100,43 +103,66 @@
 								<!-- /Wishlist -->
 
 								<!-- Cart -->
+								<?php
+									require "config.php";
+									require "models/db.php";
+									require "models/cart.php";
+									$cart = new Cart();
+									$getAllCart = $cart->getAllCart();
+									$qty = 0;
+									$total = 0;
+									foreach ($getAllCart as $value) {
+										# code...
+										$qty += $value['qty'];
+										$total += $value['total'];
+									}
+								?>
 								<div class="dropdown">
 									<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" >
 										<i class="fa fa-shopping-cart"></i>
 										<span>Your Cart</span>
-										<div class="qty">3</div>
+										<div class="qty"><?php echo $qty; ?></div>
 									</a>
 									<div class="cart-dropdown">
 										<div class="cart-list">
-											<div class="product-widget">
-												<div class="product-img">
-													<img src="./img/product01.png" alt="">
-												</div>
-												<div class="product-body">
-													<h3 class="product-name"><a href="#">product name goes here</a></h3>
-													<h4 class="product-price"><span class="qty">1x</span>$980.00</h4>
-												</div>
-												<button class="delete"><i class="fa fa-close"></i></button>
-											</div>
+								<?php
 
+									foreach ($getAllCart as $value) {
+										# code...
+									
+								?>
 											<div class="product-widget">
 												<div class="product-img">
-													<img src="./img/product02.png" alt="">
+													<img src="./img/<?php echo $value['image']; ?>" alt="">
 												</div>
 												<div class="product-body">
-													<h3 class="product-name"><a href="#">product name goes here</a></h3>
-													<h4 class="product-price"><span class="qty">3x</span>$980.00</h4>
+													<h3 class="product-name"><a href="#"><?php echo $value['name']; ?></a></h3>
+													<h4 class="product-price"><span class="qty"><?php echo $value['qty']; ?>x </span> <?php echo number_format($value['total']).' VND'; ?></h4>
 												</div>
-												<button class="delete"><i class="fa fa-close"></i></button>
+												<form action="xulycart.php" method="get">
+													<?php
+														if (isset($_GET['pro'])) {
+															# code...
+															echo '<input type="hidden" name="pro" value="0">';
+														}
+													?>
+													<input type="hidden" name="xoa" value="0">
+													<input type="hidden" name="id" value="<?php echo $value['id']; ?>">
+													<input type="hidden" name="id_cart" value="<?php echo $value['id_cart']; ?>">
+													<button class="delete"><i class="fa fa-close"></i></button>
+												</form>
 											</div>
+									<?php
+									}
+									?>
 										</div>
 										<div class="cart-summary">
-											<small>3 Item(s) selected</small>
-											<h5>SUBTOTAL: $2940.00</h5>
+											<small><?php echo $qty; ?> Item(s) selected</small>
+											<h5>SUBTOTAL: <?php echo number_format($total).' VND'; ?></h5>
 										</div>
 										<div class="cart-btns">
-											<a href="#">View Cart</a>
-											<a href="#">Checkout  <i class="fa fa-arrow-circle-right"></i></a>
+											<a href="blank.php">View Cart</a>
+											<a href="checkout.php">Checkout  <i class="fa fa-arrow-circle-right"></i></a>
 										</div>
 									</div>
 								</div>
@@ -170,17 +196,15 @@
 				<div id="responsive-nav">
 					<!-- NAV -->
 					<ul class="main-nav nav navbar-nav">
-						<li class="active"><a href="#">Home</a></li>
+						<li class="active"><a href="index.php">Home</a></li>
 						<?php
-							require "config.php";
-							require "models/db.php";
 							require "models/protype.php";
 							$protype = new Protype;
 							$getAllProtype = $protype->getAllProtype();
 							foreach ($getAllProtype as $value) {
 							
 						?>
-							<li><a href="store.php?id=<?php echo $value['type_id'] ?>"><?php echo $value['type_name']; ?></a></li>
+							<li><a href="store.php?id=<?php echo $value['type_id']; ?>&page=0"><?php echo $value['type_name']; ?></a></li>
 						<?php
 					 		} 
 					 	?>

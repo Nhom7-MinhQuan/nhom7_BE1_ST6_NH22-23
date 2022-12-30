@@ -1,0 +1,69 @@
+  if (!this._writeBuffer.length) {
+      this._bufferOffset = 0;
+      setTimeout(() => this._innerWrite());
+    }
+
+    this._pendingData += data.length;
+    this._writeBuffer.push(data);
+    this._callbacks.push(callback);
+  }
+
+  protected _innerWrite(): void {
+    const startTime = Date.now();
+    while (this._writeBuffer.length > this._bufferOffset) {
+      const data = this._writeBuffer[this._bufferOffset];
+      const cb = this._callbacks[this._bufferOffset];
+      this._bufferOffset++;
+
+      this._action(data);
+      this._pendingData -= data.length;
+      if (cb) cb();
+
+      if (Date.now() - startTime >= WRITE_TIMEOUT_MS) {
+        break;
+      }
+    }
+    if (this._writeBuffer.length > this._bufferOffset) {
+      // Allow renderer to catch up before processing the next batch
+      // trim already processed chunks if we are above threshold
+      if (this._bufferOffset > WRITE_BUFFER_LENGTH_THRESHOLD) {
+        this._writeBuffer = this._writeBuffer.slice(this._bufferOffset);
+        this._callbacks = this._callbacks.slice(this._bufferOffset);
+        this._bufferOffset = 0;
+      }
+      setTimeout(() => this._innerWrite(), 0);
+    } else {
+      this._writeBuffer = [];
+      this._callbacks = [];
+      this._pendingData = 0;
+      this._bufferOffset = 0;
+    }
+  }
+}
+/**
+ * Copyright (c) 2017 The xterm.js authors. All rights reserved.
+ * @license MIT
+ */
+
+/**
+ * Internal states of EscapeSequenceParser.
+ */
+export const enum ParserState {
+  GROUND = 0,
+  ESCAPE = 1,
+  ESCAPE_INTERMEDIATE = 2,
+  CSI_ENTRY = 3,
+  CSI_PARAM = 4,
+  CSI_INTERMEDIATE = 5,
+  CSI_IGNORE = 6,
+  SOS_PM_APC_STRING = 7,
+  OSC_STRING = 8,
+  DCS_ENTRY = 9,
+  DCS_PARAM = 10,
+  DCS_IGNORE = 11,
+  DCS_INTERMEDIATE = 12,
+  DCS_PASSTHROUGH = 13
+}
+
+/**
+* Internal act

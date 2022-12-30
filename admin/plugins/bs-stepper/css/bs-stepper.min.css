@@ -1,0 +1,24 @@
+ent(name){for(let i=this._eventStack.length-1;i>=0;--i){const event=this._eventStack[i];if(event.name===name)
+return event;}
+return null;}
+_addPageFrame(event,payload){const parent=payload['parent']&&this._pageFrames.get(payload['parent']);if(payload['parent']&&!parent)
+return false;const pageFrame=new TimelineModel.TimelineModel.PageFrame(payload);this._pageFrames.set(pageFrame.frameId,pageFrame);pageFrame.update(event.startTime,payload);if(parent)
+parent.addChild(pageFrame);return true;}
+_reset(){this._isGenericTrace=false;this._tracks=[];this._namedTracks=new Map();this._inspectedTargetEvents=[];this._timeMarkerEvents=[];this._sessionId=null;this._mainFrameNodeId=null;this._cpuProfiles=[];this._workerIdByThread=new WeakMap();this._pageFrames=new Map();this._mainFrame=null;this._minimumRecordTime=0;this._maximumRecordTime=0;}
+isGenericTrace(){return this._isGenericTrace;}
+tracingModel(){return this._tracingModel;}
+minimumRecordTime(){return this._minimumRecordTime;}
+maximumRecordTime(){return this._maximumRecordTime;}
+inspectedTargetEvents(){return this._inspectedTargetEvents;}
+tracks(){return this._tracks;}
+isEmpty(){return this.minimumRecordTime()===0&&this.maximumRecordTime()===0;}
+timeMarkerEvents(){return this._timeMarkerEvents;}
+rootFrames(){return Array.from(this._pageFrames.values()).filter(frame=>!frame.parent);}
+pageURL(){return this._mainFrame&&this._mainFrame.url||'';}
+pageFrameById(frameId){return frameId?this._pageFrames.get(frameId)||null:null;}
+networkRequests(){if(this.isGenericTrace())
+return[];const requests=new Map();const requestsList=[];const zeroStartRequestsList=[];const types=TimelineModel.TimelineModel.RecordType;const resourceTypes=new Set([types.ResourceSendRequest,types.ResourceReceiveResponse,types.ResourceReceivedData,types.ResourceFinish,types.ResourceMarkAsCached]);const events=this.inspectedTargetEvents();for(let i=0;i<events.length;++i){const e=events[i];if(!resourceTypes.has(e.name))
+continue;const id=TimelineModel.TimelineModel.globalEventId(e,'requestId');let request=requests.get(id);if(request){request.addEvent(e);}else{request=new TimelineModel.TimelineModel.NetworkRequest(e);requests.set(id,request);if(request.startTime)
+requestsList.push(request);else
+zeroStartRequestsList.push(request);}}
+return zeroStartRequestsList.concat(requestsList);}};TimelineModel.TimelineModel.RecordType={Task:'RunTask',Program:'Program',EventDispatch:'EventDispatch',GPUTask:'GPUTask',Animation:'Animation',RequestMainThreadFrame:'RequestMainThreadFrame',BeginFrame:'BeginFrame',NeedsBeginFrameChanged:'NeedsBeginFrameChanged',BeginMainThreadFrame:'BeginMainThreadFrame',ActivateLayerTree:'ActivateLayerTree',DrawFrame:'DrawFrame',HitTest:'HitTest',ScheduleStyleRecalculation:'ScheduleStyleRecalculation',RecalculateStyles:'RecalculateStyles',UpdateLayoutTree:'UpdateLayoutTree',InvalidateLayout:'InvalidateLayout',Layout:'Layout',UpdateLayer:'UpdateLayer',UpdateLayerTree:'UpdateLayerTree',PaintSetup:'PaintSetup',Paint:'Paint',PaintImage:'PaintImage',Rasterize:'Rasterize',RasterTask:'RasterTask',ScrollLayer:'ScrollLayer',CompositeLayers:'CompositeLayers',ScheduleStyleInvalidationTracking:'ScheduleStyleInvalidationTracking',StyleRecalcInvali

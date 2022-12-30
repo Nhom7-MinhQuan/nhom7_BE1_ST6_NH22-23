@@ -1,0 +1,50 @@
+nified, it returns "CSI 2 t".
+     * No default implementation.
+     */
+    getWinState?: boolean;
+    /**
+     * Ps=13      Report xterm window position. Result is "CSI 3 ; x ; y t".
+     * Ps=13 ; 2  Report xterm text-area position. Result is "CSI 3 ; x ; y t".
+     * No default implementation.
+     */
+    getWinPosition?: boolean;
+    /**
+     * Ps=14      Report xterm text area size in pixels. Result is "CSI 4 ; height ; width t".
+     * Ps=14 ; 2  Report xterm window size in pixels. Result is "CSI  4 ; height ; width t".
+     * Has a default implementation.
+     */
+    getWinSizePixels?: boolean;
+    /**
+     * Ps=15    Report size of the screen in pixels. Result is "CSI 5 ; height ; width t".
+     * No default implementation.
+     */
+    getScreenSizePixels?: boolean;
+    /**
+     * Ps=16  Report xterm character cell size in pixels. Result is "CSI 6 ; height ; width t".
+     * Has a default implementation.
+     */
+    getCellSizePixels?: boolean;
+    /**
+     * Ps=18  Report the size of the text area in characters. Result is "CSI 8 ; height ; width t".
+     * Has a default implementation.
+     */
+    getWinSizeChars?: boolean;
+    /**
+     * Ps=19  Report the size of the screen in characters. Result is "CSI 9 ; height ; width t".
+     * No default implementation.
+     */
+    getScreenSizeChars?: boolean;
+    /**
+     * Ps=20  Report xterm window's icon label. Result is "OSC L label ST".
+     * No default implementation.
+     */
+    getIconTitle?: boolean;
+    /**
+     * Ps=21  Report xterm window's title. Result is "OSC l label ST".
+     * No default implementation.
+     */
+    getWinTitle?: boolean;
+    /**
+     * Ps=22 ; 0  Save xterm icon and window title on stack.
+     * Ps=22 ; 1  Save xterm icon title on stack.
+     * Ps=22 ; 2  Save xterm window title on sta

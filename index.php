@@ -1,4 +1,5 @@
 <?php
+  session_start();
 	require "header.php"; 
 	require "models/product.php";
 ?>
@@ -20,7 +21,7 @@
 							</div>
 							<div class="shop-body">
 								<h3><?php echo $value['type_name'] ?><br>Collection</h3>
-								<a href="store.php?id=<?php echo $value['type_id'] ?>" class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
+								<a href="store.php?id=<?php echo $value['type_id'] ?>&page=0" class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
 							</div>
 						</div>
 					</div>
@@ -85,7 +86,7 @@
 											<div class="product-body">
 												<p class="product-category"><?php echo $value['type_name']; ?></p>
 												<h3 class="product-name"><a href="product.php?id=<?php echo $value['id'] ?>"><?php echo $value['name']; ?></a></h3>
-												<h4 class="product-price"><?php echo $value['price']; ?></h4>
+												<h4 class="product-price"><?php echo number_format($value['price']).' VND'; ?></h4>
 												<div class="product-rating">
 													<i class="fa fa-star"></i>
 													<i class="fa fa-star"></i>
@@ -100,12 +101,17 @@
 												</div>
 											</div>
 											<div class="add-to-cart">
-												<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+												<form action="xulycart.php" method="get">
+													<input type="hidden" name="them" value="0">
+													<input type="hidden" name="id" value="<?php echo $value['id']; ?>">
+													<input type="hidden" name="price" value="<?php echo $value['price']; ?>">
+													<button class="add-to-cart-btn" name="addtocart"><i class="fa fa-shopping-cart"></i> add to cart</button>
+												</form>
 											</div>
 										</div>
 										<?php
 											}
-										?>
+											?>
 										<!-- /product -->
 									</div>
 									<div id="slick-nav-1" class="products-slick-nav"></div>
@@ -216,8 +222,8 @@
 											</div>
 											<div class="product-body">
 												<p class="product-category"><?php echo $value['type_name'] ?></p>
-												<h3 class="product-name"><a href="product.php?id=<?php echo $value['id'] ?>"><?php echo $value['name'] ?></a></h3>
-												<h4 class="product-price"><?php echo $value['price'] ?></h4>
+												<h3 class="product-name"><a href="product.php?pro=0&id=<?php echo $value['id'] ?>"><?php echo $value['name'] ?></a></h3>
+												<h4 class="product-price"><?php echo number_format($value['price']).' VND' ?></h4>
 												<div class="product-rating">
 													<i class="fa fa-star"></i>
 													<i class="fa fa-star"></i>
@@ -232,7 +238,12 @@
 												</div>
 											</div>
 											<div class="add-to-cart">
-												<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+											<form action="xulycart.php" method="get">
+													<input type="hidden" name="them" value="0">
+													<input type="hidden" name="id" value="<?php echo $value['id']; ?>">
+													<input type="hidden" name="price" value="<?php echo $value['price']; ?>">
+													<button class="add-to-cart-btn" name="addtocart"><i class="fa fa-shopping-cart"></i> add to cart</button>
+												</form>
 											</div>
 										</div>
 										<?php
@@ -282,7 +293,7 @@
 									<div class="product-body">
 										<p class="product-category"><?php echo $value['type_name'] ?></p>
 										<h3 class="product-name"><a href="product.php?id=<?php echo $value['id'] ?>"><?php echo $value['name'] ?></a></h3>
-										<h4 class="product-price"><?php echo $value['price'] ?></h4>
+										<h4 class="product-price"><?php echo number_format($value['price']).' VND' ?></h4>
 									</div>
 								</div>
 								<?php
@@ -304,7 +315,7 @@
 									<div class="product-body">
 										<p class="product-category"><?php echo $value['type_name'] ?></p>
 										<h3 class="product-name"><a href="product.php?id=<?php echo $value['id'] ?>"><?php echo $value['name'] ?></a></h3>
-										<h4 class="product-price"><?php echo $value['price'] ?></h4>
+										<h4 class="product-price"><?php echo number_format($value['price']).' VND' ?></h4>
 									</div>
 								</div>
 								<?php
@@ -337,7 +348,7 @@
 									<div class="product-body">
 										<p class="product-category"><?php echo $value['type_name'] ?></p>
 										<h3 class="product-name"><a href="product.php?id=<?php echo $value['id'] ?>"><?php echo $value['name'] ?></a></h3>
-										<h4 class="product-price"><?php echo $value['price'] ?></h4>
+										<h4 class="product-price"><?php echo number_format($value['price']).' VND' ?></h4>
 									</div>
 								</div>
 								<?php
@@ -359,7 +370,7 @@
 									<div class="product-body">
 										<p class="product-category"><?php echo $value['type_name'] ?></p>
 										<h3 class="product-name"><a href="product.php?id=<?php echo $value['id'] ?>"><?php echo $value['name'] ?></a></h3>
-										<h4 class="product-price"><?php echo $value['price'] ?></h4>
+										<h4 class="product-price"><?php echo number_format($value['price']).' VND' ?></h4>
 									</div>
 								</div>
 								<?php
@@ -394,7 +405,7 @@
 									<div class="product-body">
 										<p class="product-category"><?php echo $value['type_name'] ?></p>
 										<h3 class="product-name"><a href="product.php?id=<?php echo $value['id'] ?>"><?php echo $value['name'] ?></a></h3>
-										<h4 class="product-price"><?php echo $value['price'] ?></h4>
+										<h4 class="product-price"><?php echo number_format($value['price']).' VND' ?></h4>
 									</div>
 								</div>
 								<?php
@@ -416,7 +427,7 @@
 									<div class="product-body">
 										<p class="product-category"><?php echo $value['type_name'] ?></p>
 										<h3 class="product-name"><a href="product.php?id=<?php echo $value['id'] ?>"><?php echo $value['name'] ?></a></h3>
-										<h4 class="product-price"><?php echo $value['price'] ?></h4>
+										<h4 class="product-price"><?php echo number_format($value['price']).' VND' ?></h4>
 									</div>
 								</div>
 								<?php

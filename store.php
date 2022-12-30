@@ -1,198 +1,11 @@
-
-
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-
-		<title>Electro - HTML Ecommerce Template</title>
-
- 		<!-- Google font -->
- 		<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
-
- 		<!-- Bootstrap -->
- 		<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css"/>
-
- 		<!-- Slick -->
- 		<link type="text/css" rel="stylesheet" href="css/slick.css"/>
- 		<link type="text/css" rel="stylesheet" href="css/slick-theme.css"/>
-
- 		<!-- nouislider -->
- 		<link type="text/css" rel="stylesheet" href="css/nouislider.min.css"/>
-
- 		<!-- Font Awesome Icon -->
- 		<link rel="stylesheet" href="css/font-awesome.min.css">
-
- 		<!-- Custom stlylesheet -->
- 		<link type="text/css" rel="stylesheet" href="css/style.css"/>
-
-		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-		<!--[if lt IE 9]>
-		  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-		<![endif]-->
-
-    </head>
-	<body>
-		<!-- HEADER -->
-		<header>
-			<!-- TOP HEADER -->
-			<div id="top-header">
-				<div class="container">
-					<ul class="header-links pull-left">
-						<li><a href="#"><i class="fa fa-phone"></i> +021-95-51-84</a></li>
-						<li><a href="#"><i class="fa fa-envelope-o"></i> email@email.com</a></li>
-						<li><a href="#"><i class="fa fa-map-marker"></i> 1734 Stonecoal Road</a></li>
-					</ul>
-					<ul class="header-links pull-right">
-						<li><a href="#"><i class="fa fa-dollar"></i> USD</a></li>
-						<li><a href="#"><i class="fa fa-user-o"></i> My Account</a></li>
-					</ul>
-				</div>
-			</div>
-			<!-- /TOP HEADER -->
-
-			<!-- MAIN HEADER -->
-			<div id="header">
-				<!-- container -->
-				<div class="container">
-					<!-- row -->
-					<div class="row">
-						<!-- LOGO -->
-						<div class="col-md-3">
-							<div class="header-logo">
-								<a href="#" class="logo">
-									<img src="./img/logo.png" alt="">
-								</a>
-							</div>
-						</div>
-						<!-- /LOGO -->
-
-						<!-- SEARCH BAR -->
-						<div class="col-md-6">
-							<div class="header-search">
-								<form>
-									<select class="input-select">
-										<option value="0">All Categories</option>
-										<option value="1">Category 01</option>
-										<option value="1">Category 02</option>
-									</select>
-									<input class="input" placeholder="Search here">
-									<button class="search-btn">Search</button>
-								</form>
-							</div>
-						</div>
-						<!-- /SEARCH BAR -->
-
-						<!-- ACCOUNT -->
-						<div class="col-md-3 clearfix">
-							<div class="header-ctn">
-								<!-- Wishlist -->
-								<div>
-									<a href="#">
-										<i class="fa fa-heart-o"></i>
-										<span>Your Wishlist</span>
-										<div class="qty">2</div>
-									</a>
-								</div>
-								<!-- /Wishlist -->
-
-								<!-- Cart -->
-								<div class="dropdown">
-									<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-										<i class="fa fa-shopping-cart"></i>
-										<span>Your Cart</span>
-										<div class="qty">3</div>
-									</a>
-									<div class="cart-dropdown">
-										<div class="cart-list">
-											<div class="product-widget">
-												<div class="product-img">
-													<img src="./img/product01.png" alt="">
-												</div>
-												<div class="product-body">
-													<h3 class="product-name"><a href="#">product name goes here</a></h3>
-													<h4 class="product-price"><span class="qty">1x</span>$980.00</h4>
-												</div>
-												<button class="delete"><i class="fa fa-close"></i></button>
-											</div>
-
-											<div class="product-widget">
-												<div class="product-img">
-													<img src="./img/product02.png" alt="">
-												</div>
-												<div class="product-body">
-													<h3 class="product-name"><a href="#">product name goes here</a></h3>
-													<h4 class="product-price"><span class="qty">3x</span>$980.00</h4>
-												</div>
-												<button class="delete"><i class="fa fa-close"></i></button>
-											</div>
-										</div>
-										<div class="cart-summary">
-											<small>3 Item(s) selected</small>
-											<h5>SUBTOTAL: $2940.00</h5>
-										</div>
-										<div class="cart-btns">
-											<a href="#">View Cart</a>
-											<a href="#">Checkout  <i class="fa fa-arrow-circle-right"></i></a>
-										</div>
-									</div>
-								</div>
-								<!-- /Cart -->
-
-								<!-- Menu Toogle -->
-								<div class="menu-toggle">
-									<a href="#">
-										<i class="fa fa-bars"></i>
-										<span>Menu</span>
-									</a>
-								</div>
-								<!-- /Menu Toogle -->
-							</div>
-						</div>
-						<!-- /ACCOUNT -->
-					</div>
-					<!-- row -->
-				</div>
-				<!-- container -->
-			</div>
-			<!-- /MAIN HEADER -->
-		</header>
-		<!-- /HEADER -->
-
-		<!-- NAVIGATION -->
-		<nav id="navigation">
-			<!-- container -->
-			<div class="container">
-				<!-- responsive-nav -->
-				<div id="responsive-nav">
-					<!-- NAV -->
-					<ul class="main-nav nav navbar-nav">
-						<li class="active"><a href="index.php">Home</a></li>
-						<li><a href="http://localhost/BE-WEB/nhom7/store.php?id=1">Điện Thoại</a></li>
-						<li><a href="http://localhost/BE-WEB/nhom7/store.php?id=2">Laptop</a></li>
-						<li><a href="http://localhost/BE-WEB/nhom7/store.php?id=3">Tivi</a></li>
-						<li><a href="http://localhost/BE-WEB/nhom7/store.php?id=4">Đồng Hồ</a></li>
-						<li><a href="http://localhost/BE-WEB/nhom7/store.php?id=5">Loa</a></li>
-					</ul>
-					<!-- /NAV -->
-				</div>
-				<!-- /responsive-nav -->
-			</div>
-			<!-- /container -->
-		</nav>
-		<!-- /NAVIGATION -->
+<?php require "header.php"; ?>
 
 		<!-- BREADCRUMB -->
 		<div id="breadcrumb" class="section">
 			<!-- container -->
 			<div class="container">
 				<!-- row -->
-				<div class="row">
+				<!-- <div class="row">
 					<div class="col-md-12">
 						<ul class="breadcrumb-tree">
 							<li><a href="#">Home</a></li>
@@ -201,7 +14,7 @@
 							<li class="active">Headphones (227,490 Results)</li>
 						</ul>
 					</div>
-				</div>
+				</div> -->
 				<!-- /row -->
 			</div>
 			<!-- /container -->
@@ -424,16 +237,16 @@
 
 						<!-- store products -->
 						<div class="row">
-						<?php
+	<?php
 							
-	if(isset($_GET['id'])):
+	if(isset($_GET['id']) && isset($_GET['page'])):
 		$id = $_GET['id'];
-		require "config.php";
-		require "models/db.php";
+		$page = $_GET['page'];
 		require "models/product.php";
 		$product = new Product;
 		$getProductBytype_Id = $product->getProductBytype_Id($id);
-		foreach($getProductBytype_Id as $value):
+		$page = $product->page($id, $page);
+		foreach($page as $value):
 	?>
 							<!-- product -->
 							<div class="col-md-4 col-xs-6">
@@ -447,8 +260,19 @@
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
-										<h3><?php echo $value['name']?></h3>
-										<h4 ><?php echo $value['price']?></h4>
+										<h3 style="
+											display: block;
+											display: -webkit-box;
+											height: 16px*1.3*3;
+											font-size: 16px;
+											line-height: 1.3;
+											-webkit-line-clamp: 1;  /* số dòng hiển thị */
+											-webkit-box-orient: vertical;
+											overflow: hidden;
+											text-overflow: ellipsis;
+											margin-top:10px;
+										"><a href="product.php?pro=0&id=<?php echo $value['id']; ?>"><?php echo $value['name']?></a></h3>
+										<h4 ><?php echo number_format($value['price'])?> VNĐ</h4>
 										<div class="product-rating">
 											<i class="fa fa-star"></i>
 											<i class="fa fa-star"></i>
@@ -463,21 +287,104 @@
 										</div>
 									</div>
 									<div class="add-to-cart">
-										<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+									<form action="xulycart.php" method="get">
+													<input type="hidden" name="them" value="0">
+													<input type="hidden" name="id" value="<?php echo $value['id']; ?>">
+													<input type="hidden" name="price" value="<?php echo $value['price']; ?>">
+													<button class="add-to-cart-btn" name="addtocart"><i class="fa fa-shopping-cart"></i> add to cart</button>
+												</form>
 									</div>
 								</div>
 							</div>
 							<!-- /product -->
 	<?php endforeach; endif;?>
+	
+	<?php
+	if(isset($_GET['keyword'])):
+		$keyword = $_GET['keyword'];
+		$page = $_GET['page'];
+		require "models/product.php";
+		$product = new Product;
+		$search=$product->SearchName($keyword);
+		$page = $product->pageSearch($keyword, $page);
+		foreach($page as $value):
+	?>
+							<!-- product -->
+							<div class="col-md-4 col-xs-6">
+								<div class="product">
+									<div class="product-img">
+									<img src="./img/<?php echo $value['image']; ?>">
+										<div class="product-label">
+											<span class="sale">-30%</span>
+											<span class="new">NEW</span>
+										</div>
+									</div>
+									<div class="product-body">
+										<p class="product-category">Category</p>
+										<h3 style="
+											display: block;
+											display: -webkit-box;
+											height: 16px*1.3*3;
+											font-size: 16px;
+											line-height: 1.3;
+											-webkit-line-clamp: 1;  /* số dòng hiển thị */
+											-webkit-box-orient: vertical;
+											overflow: hidden;
+											text-overflow: ellipsis;
+											margin-top:10px;
+										"><a href="product.php?pro=0&id=<?php echo $value['id']; ?>"><?php echo $value['name']?></a></h3>
+										<h4 ><?php echo number_format($value['price'])?> VNĐ</h4>
+										<div class="product-rating">
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+											<i class="fa fa-star"></i>
+										</div>
+										<div class="product-btns">
+											<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
+											<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
+											<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
+										</div>
+									</div>
+									<div class="add-to-cart">
+									<form action="xulycart.php" method="get">
+													<input type="hidden" name="them" value="0">
+													<input type="hidden" name="id" value="<?php echo $value['id']; ?>">
+													<input type="hidden" name="price" value="<?php echo $value['price']; ?>">
+													<button class="add-to-cart-btn" name="addtocart"><i class="fa fa-shopping-cart"></i> add to cart</button>
+												</form>
+									</div>
+								</div>
+							</div>
+							<!-- /product -->
+	<?php endforeach; endif;?>
+	</div>
 						<!-- store bottom filter -->
 						<div class="store-filter clearfix">
 							<span class="store-qty">Showing 20-100 products</span>
 							<ul class="store-pagination">
-								<li class="active">1</li>
-								<li><a href="#">2</a></li>
-								<li><a href="#">3</a></li>
-								<li><a href="#">4</a></li>
-								<li><a href="#"><i class="fa fa-angle-right"></i></a></li>
+								<?php 
+								if (isset($_GET['keyword'])) {
+									# code...
+									for ($i=0; $i < ceil(sizeof($search)/3); $i++) { 
+										?>
+								<li><a href="store.php?	keyword=<?php echo $_GET['keyword']; ?>&page=<?php echo $i ?>"><?php echo $i+1; ?></a></li>
+								<?php
+									}
+								}
+								?>
+								<?php 
+								if (isset($_GET['id'])) {
+									# code...
+									for ($i=0; $i < ceil(sizeof($getProductBytype_Id)/3); $i++) { 
+										?>
+								<li><a href="store.php?	id=<?php echo $_GET['id']; ?>&page=<?php echo $i ?>"><?php echo $i+1; ?></a></li>
+								<?php
+									}
+								}
+								?>
+								<!-- <li><a href="#"><i class="fa fa-angle-right"></i></a></li> -->
 							</ul>
 						</div>
 						<!-- /store bottom filter -->

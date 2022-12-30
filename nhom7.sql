@@ -2,10 +2,10 @@
 -- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
--- Máy chủ: 127.0.0.1:3306
--- Thời gian đã tạo: Th10 11, 2022 lúc 05:34 PM
--- Phiên bản máy phục vụ: 5.7.36
--- Phiên bản PHP: 7.4.26
+-- Máy chủ: 127.0.0.1
+-- Thời gian đã tạo: Th10 26, 2022 lúc 02:46 PM
+-- Phiên bản máy phục vụ: 10.4.22-MariaDB
+-- Phiên bản PHP: 7.4.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -27,12 +27,10 @@ SET time_zone = "+00:00";
 -- Cấu trúc bảng cho bảng `manufactures`
 --
 
-DROP TABLE IF EXISTS `manufactures`;
-CREATE TABLE IF NOT EXISTS `manufactures` (
-  `manu_id` int(11) NOT NULL AUTO_INCREMENT,
-  `manu_name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`manu_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+CREATE TABLE `manufactures` (
+  `manu_id` int(11) NOT NULL,
+  `manu_name` varchar(100) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `manufactures`
@@ -51,9 +49,8 @@ INSERT INTO `manufactures` (`manu_id`, `manu_name`) VALUES
 -- Cấu trúc bảng cho bảng `products`
 --
 
-DROP TABLE IF EXISTS `products`;
-CREATE TABLE IF NOT EXISTS `products` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `products` (
+  `id` int(11) NOT NULL,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `manu_id` int(11) NOT NULL,
   `type_id` int(11) NOT NULL,
@@ -61,9 +58,8 @@ CREATE TABLE IF NOT EXISTS `products` (
   `image` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
   `description` text COLLATE utf8_unicode_ci NOT NULL,
   `feature` tinyint(4) NOT NULL,
-  `created_at` timestamp NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=31 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `products`
@@ -107,13 +103,11 @@ INSERT INTO `products` (`id`, `name`, `manu_id`, `type_id`, `price`, `image`, `d
 -- Cấu trúc bảng cho bảng `protypes`
 --
 
-DROP TABLE IF EXISTS `protypes`;
-CREATE TABLE IF NOT EXISTS `protypes` (
-  `type_id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `protypes` (
+  `type_id` int(11) NOT NULL,
   `type_name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  `type_image` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`type_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `type_image` varchar(150) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `protypes`
@@ -125,6 +119,89 @@ INSERT INTO `protypes` (`type_id`, `type_name`, `type_image`) VALUES
 (3, 'Tivi', 'vi-vn-google-sony-4k-50-inch-kd-50x75k-1.jpg'),
 (4, 'Đồng Hồ', 's6-44mm.jpg'),
 (5, 'Loa', 'shop03.png');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `users`
+--
+
+CREATE TABLE `users` (
+  `user_id` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(250) NOT NULL,
+  `role_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Đang đổ dữ liệu cho bảng `users`
+--
+
+INSERT INTO `users` (`user_id`, `username`, `password`, `role_id`) VALUES
+(1, 'admin1', '81dc9bdb52d04dc20036dbd8313ed055', 1),
+(2, 'admin2', '6562c5c1f33db6e05a082a88cddab5ea', 2),
+(7, 'admin1', '81dc9bdb52d04dc20036dbd8313ed055', 0),
+(8, 'admin', '81dc9bdb52d04dc20036dbd8313ed055', 0),
+(9, 'vantrong', 'c03c22a6483faa89013d9a2f88511078', 0),
+(10, '21211tt1690', '827ccb0eea8a706c4c34a16891f84e7b', 0),
+(11, 'admin5', 'c4ca4238a0b923820dcc509a6f75849b', 0),
+(12, 'admin6', '827ccb0eea8a706c4c34a16891f84e7b', 0);
+
+--
+-- Chỉ mục cho các bảng đã đổ
+--
+
+--
+-- Chỉ mục cho bảng `manufactures`
+--
+ALTER TABLE `manufactures`
+  ADD PRIMARY KEY (`manu_id`);
+
+--
+-- Chỉ mục cho bảng `products`
+--
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Chỉ mục cho bảng `protypes`
+--
+ALTER TABLE `protypes`
+  ADD PRIMARY KEY (`type_id`);
+
+--
+-- Chỉ mục cho bảng `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`user_id`);
+
+--
+-- AUTO_INCREMENT cho các bảng đã đổ
+--
+
+--
+-- AUTO_INCREMENT cho bảng `manufactures`
+--
+ALTER TABLE `manufactures`
+  MODIFY `manu_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT cho bảng `products`
+--
+ALTER TABLE `products`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+
+--
+-- AUTO_INCREMENT cho bảng `protypes`
+--
+ALTER TABLE `protypes`
+  MODIFY `type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT cho bảng `users`
+--
+ALTER TABLE `users`
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

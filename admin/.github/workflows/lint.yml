@@ -1,0 +1,16 @@
+﻿<html dir="rtl" lang="ur-pk">
+<head>
+    <title>Windows | 14 جنوری 2020 کو Windows 7 کے لیے سلامتی کی معاونت اختتام کو پہنچ رہی ہے۔</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <link rel="stylesheet" href="./styles.css" type="text/css" />
+	<script src="./script.js" type="text/javascript"></script>
+</head>
+<body onload="resize()" onresize="resize()">
+    <div class="logo">
+        <img src="microsoft-logo.png" alt="Microsoft" role="presentation" aria-hidden="true">
+    </div>
+    <div class="img-container">
+        <img src="main.jpg" alt="لیپ ٹاپ کمپیوٹر اور ڈھال والی ایک دائرہ نما شبیہ جو سلامتی کو غیر فعال نمائش کر رہی ہے۔">
+    </div>
+    <div class="content" tabindex="0">

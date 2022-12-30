@@ -1,0 +1,100 @@
+gR = (fg.rgba >> 24) & 0xFF;
+    const fgG = (fg.rgba >> 16) & 0xFF;
+    const fgB = (fg.rgba >> 8) & 0xFF;
+    const bgR = (bg.rgba >> 24) & 0xFF;
+    const bgG = (bg.rgba >> 16) & 0xFF;
+    const bgB = (bg.rgba >> 8) & 0xFF;
+    const r = bgR + Math.round((fgR - bgR) * a);
+    const g = bgG + Math.round((fgG - bgG) * a);
+    const b = bgB + Math.round((fgB - bgB) * a);
+    const css = channels.toCss(r, g, b);
+    const rgba = channels.toRgba(r, g, b);
+    return { css, rgba };
+  }
+
+  export function isOpaque(color: IColor): boolean {
+    return (color.rgba & 0xFF) === 0xFF;
+  }
+
+  export function ensureContrastRatio(bg: IColor, fg: IColor, ratio: number): IColor | undefined {
+    const result = rgba.ensureContrastRatio(bg.rgba, fg.rgba, ratio);
+    if (!result) {
+      return undefined;
+    }
+    return rgba.toColor(
+      (result >> 24 & 0xFF),
+      (result >> 16 & 0xFF),
+      (result >> 8  & 0xFF)
+    );
+  }
+
+  export function opaque(color: IColor): IColor {
+    const rgbaColor = (color.rgba | 0xFF) >>> 0;
+    const [r, g, b] = rgba.toChannels(rgbaColor);
+    return {
+      css: channels.toCss(r, g, b),
+      rgba: rgbaColor
+    };
+  }
+
+  export function opacity(color: IColor, opacity: number): IColor {
+    const a = Math.round(opacity * 0xFF);
+    const [r, g, b] = rgba.toChannels(color.rgba);
+    return {
+      css: channels.toCss(r, g, b, a),
+      rgba: channels.toRgba(r, g, b, a)
+    };
+  }
+}
+
+/**
+ * Helper functions where the source type is "css" (string: '#rgb', '#rgba', '#rrggbb', '#rrggbbaa').
+ */
+export namespace css {
+  export function toColor(css: string): IColor {
+    switch (css.length) {
+      case 7: // #rrggbb
+        return {
+          css,
+          rgba: (parseInt(css.slice(1), 16) << 8 | 0xFF) >>> 0
+        };
+      case 9: // #rrggbbaa
+        return {
+          css,
+          rgba: parseInt(css.slice(1), 16) >>> 0
+        };
+    }
+    throw new Error('css.toColor: Unsupported css format');
+  }
+}
+
+/**
+ * Helper functions where the source type is "rgb" (number: 0xrrggbb).
+ */
+export namespace rgb {
+  /**
+   * Gets the relative luminance of an RGB color, this is useful in determining the contrast ratio
+   * between two colors.
+   * @param rgb The color to use.
+   * @see https://www.w3.org/TR/WCAG20/#relativeluminancedef
+   */
+  export function relativeLuminance(rgb: number): number {
+    return relativeLuminance2(
+      (rgb >> 16) & 0xFF,
+      (rgb >> 8 ) & 0xFF,
+      (rgb      ) & 0xFF);
+  }
+
+  /**
+   * Gets the relative luminance of an RGB color, this is useful in determining the contrast ratio
+   * between two colors.
+   * @param r The red channel (0x00 to 0xFF).
+   * @param g The green channel (0x00 to 0xFF).
+   * @param b The blue channel (0x00 to 0xFF).
+   * @see https://www.w3.org/TR/WCAG20/#relativeluminancedef
+   */
+  export function relativeLuminance2(r: number, g: number, b: number): number {
+    const rs = r / 255;
+    const gs = g / 255;
+    const bs = b / 255;
+    const rr = rs <= 0.03928 ? rs / 12.92 : Math.pow((rs + 0.055) / 1.055, 2.
